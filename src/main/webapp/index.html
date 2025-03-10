@@ -54,8 +54,7 @@
     <!-- Datos dinámicos -->
     </tbody>
 </table>
-<!-- Después de la tabla de empleados -->
-<div id="pagination" class="pagination"></div>
+
 <!-- Agregar esto en el HTML existente -->
 <h2>Procesar Nómina CSV</h2>
 <form id="formCSV">
@@ -75,6 +74,181 @@
     <tbody id="cuerpoResultados">
     </tbody>
 </table>
-<script src="js/app.js"></script>
+
+<script>
+    document.getElementById('formCSV').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('archivo', document.getElementById('archivo').files[0]);
+
+        try {
+            const response = await fetch('/api/nominas/calcular', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                mostrarErroresCSV(data.errores);
+                return;
+            }
+
+            actualizarResultados(data.resultados);
+
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    function actualizarResultados(resultados) {
+        const tbody = document.getElementById('cuerpoResultados');
+        tbody.innerHTML = '';
+
+        resultados.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.rut}</td>
+                <td>${item.nombreCompleto}</td>
+                <td>$${item.salarioFinal.toLocaleString()}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function mostrarErroresCSV(errores) {
+        let mensaje = "Errores en el archivo:\n";
+        errores.forEach(error => {
+            mensaje += `Fila ${error.fila}: ${error.error}\n`;
+        });
+        alert(mensaje);
+    }
+</script>
+
+<script>
+        // Cargar empleados al iniciar
+        document.addEventListener('DOMContentLoaded', cargarEmpleados);
+
+        async function cargarEmpleados() {
+            try {
+                mostrarLoading(true);
+                const response = await fetch('/api/empleados');
+
+                if (!response.ok) throw new Error('Error al cargar empleados');
+
+                const empleados = await response.json();
+                actualizarTabla(empleados);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        function actualizarTabla(empleados) {
+            const tbody = document.getElementById('tablaBody');
+            tbody.innerHTML = '';
+
+            empleados.forEach(empleado => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${empleado.nombre}</td>
+                    <td>${empleado.apellido}</td>
+                    <td>${empleado.rut}</td>
+                    <td>${empleado.cargo}</td>
+                    <td>$${empleado.salarioBase.toLocaleString()}</td>
+                    <td>
+                        <button onclick="eliminarEmpleado(${empleado.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Manejar envío de formulario
+        document.getElementById('formEmpleado').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            limpiarErrores();
+
+            const empleado = {
+                nombre: document.getElementById('nombre').value.trim(),
+                apellido: document.getElementById('apellido').value.trim(),
+                rut: document.getElementById('rut').value.trim(),
+                cargo: document.getElementById('cargo').value.trim(),
+                salarioBase: parseFloat(document.getElementById('salario').value)
+            };
+
+            if (validarFormulario(empleado)) {
+                try {
+                    const response = await fetch('/api/empleados', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(empleado)
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error);
+                    }
+
+                    cargarEmpleados();
+                    e.target.reset();
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+        });
+
+        async function eliminarEmpleado(id) {
+            if (confirm('¿Eliminar empleado?')) {
+                try {
+                    const response = await fetch(`/api/empleados/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) throw new Error('Error al eliminar');
+
+                    cargarEmpleados();
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+        }
+
+        // Funciones auxiliares
+        function validarFormulario(empleado) {
+            let valido = true;
+
+            if (!empleado.nombre) {
+                mostrarError('errorNombre', 'Nombre requerido');
+                valido = false;
+            }
+
+            if (!/^\d{7,8}-[\dKk]$/.test(empleado.rut)) {
+                mostrarError('errorRut', 'RUT inválido');
+                valido = false;
+            }
+
+            if (empleado.salarioBase < 400000) {
+                mostrarError('errorSalario', 'Mínimo $400,000');
+                valido = false;
+            }
+
+            return valido;
+        }
+
+        function mostrarError(elementoId, mensaje) {
+            document.getElementById(elementoId).textContent = mensaje;
+        }
+
+        function limpiarErrores() {
+            document.querySelectorAll('[id^="error"]').forEach(el => el.textContent = '');
+        }
+
+        function mostrarLoading(mostrar) {
+            document.getElementById('loading').style.display = mostrar ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>
