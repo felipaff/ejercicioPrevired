@@ -70,10 +70,10 @@ public class NominaServlet extends HttpServlet {
                 }
             }
 
-            if (!errores.isEmpty()) {
+            /*if (!errores.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 responseData.put("errores", errores);
-            }
+            }*/
             responseData.put("resultados", resultados);
 
         } catch (Exception e) {

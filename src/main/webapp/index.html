@@ -63,11 +63,12 @@
 </form>
 
 <h3>Resultados de Nómina</h3>
+<div id="loading">Cargando...</div>
 <table id="tablaResultados">
     <thead>
     <tr>
-        <th>RUT</th>
-        <th>Nombre</th>
+        <th>rut</th>
+        <th>NombreCompleto</th>
         <th>Salario Final</th>
     </tr>
     </thead>
@@ -94,8 +95,9 @@
                 mostrarErroresCSV(data.errores);
                 return;
             }
-
+            console.log(data.resultados);
             actualizarResultados(data.resultados);
+            cargarEmpleados();
 
         } catch (error) {
             alert('Error: ' + error.message);
@@ -103,11 +105,18 @@
     });
 
     function actualizarResultados(resultados) {
+    console.log("cuerpoResultados", cuerpoResultados);
         const tbody = document.getElementById('cuerpoResultados');
+
+        console.log(cuerpoResultados);
         tbody.innerHTML = '';
 
         resultados.forEach(item => {
             const tr = document.createElement('tr');
+            console.log("item", item);
+            console.log("item.nombreCompleto", item.nombreCompleto);
+            console.log("item.rut", item.rut);
+            console.log("item.salarioFinal", item.salarioFinal);
             tr.innerHTML = `
                 <td>${item.rut}</td>
                 <td>${item.nombreCompleto}</td>
