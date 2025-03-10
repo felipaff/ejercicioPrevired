@@ -93,13 +93,15 @@
 
             if (!response.ok) {
                 mostrarErroresCSV(data.errores);
-                return;
             }
-            console.log(data.resultados);
             actualizarResultados(data.resultados);
             cargarEmpleados();
 
         } catch (error) {
+        //para que muestre los que si pudo ingestar, de lo contrario no mostrará nada, habría que consultar por postman.
+            actualizarResultados(data.resultados);
+            cargarEmpleados();
+            //muestra la fila donde se encuentra el problema
             alert('Error: ' + error.message);
         }
     });

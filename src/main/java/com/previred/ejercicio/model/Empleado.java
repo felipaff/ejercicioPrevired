@@ -17,18 +17,6 @@ public class Empleado {
     // Constructor vacío (necesario para Gson y JDBC)
     public Empleado() {}
 
-    // Constructor con campos básicos (Parte 1)
-    /*public Empleado(String nombre, String apellido, String rut, String cargo, BigDecimal salarioBase) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.rut = rut;
-        this.cargo = cargo;
-        this.salarioBase = salarioBase;
-        this.bonos = BigDecimal.ZERO;      // Inicializado en 0
-        this.descuentos = BigDecimal.ZERO; // Inicializado en 0
-        this.salarioFinal= salarioBase.add(bonos).subtract(descuentos);
-    }*/
-
     public Empleado(String nombre, String apellido, String rut, String cargo,
                     BigDecimal salarioBase, BigDecimal bonos, BigDecimal descuentos) {
         this.nombre = nombre;
