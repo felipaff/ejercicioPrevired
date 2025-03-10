@@ -15,8 +15,8 @@ public class EmpleadoDAO {
 
     // SQL Queries
     private static final String SQL_INSERT = "INSERT INTO empleados "
-            + "(nombre, apellido, rut, cargo, salario_base, bonos, descuentos) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            + "(nombre, apellido, rut, cargo, salario_base, bonos, descuentos, salario_final) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_SELECT_ALL = "SELECT * FROM empleados";
 
@@ -114,6 +114,7 @@ public class EmpleadoDAO {
         emp.setSalarioBase(rs.getBigDecimal("salario_base"));
         emp.setBonos(rs.getBigDecimal("bonos"));
         emp.setDescuentos(rs.getBigDecimal("descuentos"));
+        emp.setSalarioFinal(rs.getBigDecimal("salario_final"));
         return emp;
     }
 
@@ -125,6 +126,7 @@ public class EmpleadoDAO {
         stmt.setBigDecimal(5, emp.getSalarioBase());
         stmt.setBigDecimal(6, emp.getBonos());
         stmt.setBigDecimal(7, emp.getDescuentos());
+        stmt.setBigDecimal(8, emp.getSalarioFinal());
     }
 
     private void validateEmpleado(Empleado empleado) throws IllegalArgumentException {
@@ -143,6 +145,8 @@ public class EmpleadoDAO {
         if (empleado.getDescuentos().compareTo(empleado.getSalarioBase()) > 0) {
             throw new IllegalArgumentException("Descuentos superan el salario base");
         }
+
+        empleado.setSalarioFinal(empleado.getSalarioBase().add(empleado.getBonos()).subtract(empleado.getDescuentos()));
     }
 
     public List<Empleado> getPaginated(int page, int size) throws SQLException {

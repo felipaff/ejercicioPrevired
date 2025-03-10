@@ -42,7 +42,8 @@ public class DatabaseUtil {
                     "cargo VARCHAR(255), " +
                     "salario_base DECIMAL(10,2), " +
                     "bonos DECIMAL(10,2), " +
-                    "descuentos DECIMAL(10,2)" +
+                    "descuentos DECIMAL(10,2), " +
+                    "salario_final DECIMAL(10,2)" +
                     ")";
             stmt.execute(sql);
             logger.info("Tabla 'empleados' creada exitosamente");

@@ -12,11 +12,13 @@ public class Empleado {
     private BigDecimal bonos;        // Bonos (<= 50% del salario base)
     private BigDecimal descuentos;   // Descuentos (<= salario base)
 
+    private BigDecimal salarioFinal;  // Salario final (Salario Base+Bonos)−Descuentos
+
     // Constructor vacío (necesario para Gson y JDBC)
     public Empleado() {}
 
     // Constructor con campos básicos (Parte 1)
-    public Empleado(String nombre, String apellido, String rut, String cargo, BigDecimal salarioBase) {
+    /*public Empleado(String nombre, String apellido, String rut, String cargo, BigDecimal salarioBase) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.rut = rut;
@@ -24,7 +26,8 @@ public class Empleado {
         this.salarioBase = salarioBase;
         this.bonos = BigDecimal.ZERO;      // Inicializado en 0
         this.descuentos = BigDecimal.ZERO; // Inicializado en 0
-    }
+        this.salarioFinal= salarioBase.add(bonos).subtract(descuentos);
+    }*/
 
     public Empleado(String nombre, String apellido, String rut, String cargo,
                     BigDecimal salarioBase, BigDecimal bonos, BigDecimal descuentos) {
@@ -35,6 +38,7 @@ public class Empleado {
         this.salarioBase = salarioBase;
         this.bonos = bonos;
         this.descuentos = descuentos;
+        this.salarioFinal= salarioBase.add(bonos).subtract(descuentos);
     }
 
     // Getters y Setters
@@ -66,4 +70,8 @@ public class Empleado {
     public BigDecimal calcularSalarioFinal() {
         return salarioBase.add(bonos).subtract(descuentos);
     }
+
+    public BigDecimal getSalarioFinal() { return salarioFinal; }
+
+    public void setSalarioFinal(BigDecimal salarioFinal) { this.salarioFinal = salarioFinal; }
 }
