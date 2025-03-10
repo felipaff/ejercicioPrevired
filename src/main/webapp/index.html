@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Empleados</title>
+</head>
+<body>
+<h1>Gestión de Empleados</h1>
+
+<h2>Agregar Empleado</h2>
+<form id="formEmpleado">
+    <div>
+        <label>Nombre: <input type="text" id="nombre" required></label>
+        <div id="errorNombre"></div>
+    </div>
+
+    <div>
+        <label>Apellido: <input type="text" id="apellido" required></label>
+        <div id="errorApellido"></div>
+    </div>
+
+    <div>
+        <label>RUT: <input type="text" id="rut" required></label>
+        <div id="errorRut"></div>
+    </div>
+
+    <div>
+        <label>Cargo: <input type="text" id="cargo" required></label>
+        <div id="errorCargo"></div>
+    </div>
+
+    <div>
+        <label>Salario: <input type="number" id="salario" min="400000" required></label>
+        <div id="errorSalario"></div>
+    </div>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<h2>Lista de Empleados</h2>
+<div id="loading">Cargando...</div>
+<table id="tablaEmpleados">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>RUT</th>
+        <th>Cargo</th>
+        <th>Salario</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody id="tablaBody">
+    <!-- Datos dinámicos -->
+    </tbody>
+</table>
+<!-- Después de la tabla de empleados -->
+<div id="pagination" class="pagination"></div>
+<!-- Agregar esto en el HTML existente -->
+<h2>Procesar Nómina CSV</h2>
+<form id="formCSV">
+    <input type="file" id="archivo" name="archivo" accept=".csv" required>
+    <button type="submit">Procesar</button>
+</form>
+
+<h3>Resultados de Nómina</h3>
+<table id="tablaResultados">
+    <thead>
+    <tr>
+        <th>RUT</th>
+        <th>Nombre</th>
+        <th>Salario Final</th>
+    </tr>
+    </thead>
+    <tbody id="cuerpoResultados">
+    </tbody>
+</table>
+<script src="js/app.js"></script>
+</body>
+</html>
