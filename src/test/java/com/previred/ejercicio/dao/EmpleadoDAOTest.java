@@ -10,7 +10,7 @@ public class EmpleadoDAOTest {
 
     @BeforeAll
     static void setup() throws SQLException {
-        DatabaseUtil.getConnection(); // Crea la tabla
+        DatabaseUtil.getConnection();
     }
 
     @Test
